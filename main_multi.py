@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup as BS
 from datetime import datetime
 import xlsxwriter
+from multiprocessing import Pool
 
 
 def get_html(url):
@@ -91,19 +92,25 @@ def write_excel(data):
     workbook.close()
     
     
+    
+def multi_pars(page_num):
+    URL = 'https://www.house.kg/snyat-kvartiru?region=1&town=2&sort_by=upped_at+desc'
+    
+    page_url = URL + f'&page={page_num}'
+    print(page_num)
+    html = get_html(page_num)
+    links = get_page_links(html)
+    for link in links:
+        detail_html = get_html(link)
+        data = get_post_data(detail_html)
+        write_excel(data)
+    
 def main():
     start = datetime.now()
     URL = 'https://www.house.kg/snyat-kvartiru?region=1&town=2&sort_by=upped_at+desc'
     last_page = get_last_page(get_html(URL))
     html = get_html(URL)
-    for i in range(1,3):
-        page_url = URL + f'&page={i}'
-        
-        links = get_page_links(html)
-        for link in links:
-            detail_html = get_html(link)
-            data = get_post_data(detail_html)
-            write_excel(data)
+    
     end = datetime.now()
     result = end - start
     print(result)

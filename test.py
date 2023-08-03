@@ -2,6 +2,7 @@
 # from bs4 import BeautifulSoup as BS
 
 
+
 # file = open("test.html", encoding="utf-8")
 
 # html = file.read()
